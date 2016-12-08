@@ -12,8 +12,8 @@ import java.util.List;
 public interface WordRepository extends CrudRepository<Word, Long> {
 
     @Query(value = "SELECT t FROM Word t WHERE engValue = ?1")
-    List<Word> findByEngValue(String engValue);
+    Word findByEngValue(String engValue);
 
     @Query(value = "SELECT t FROM Word t WHERE rusValue = ?1")
-    List<Word> findByRusValue(String rusValue);
+    Word findByRusValue(String rusValue);
 }

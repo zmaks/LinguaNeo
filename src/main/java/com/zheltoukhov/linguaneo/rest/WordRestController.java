@@ -20,4 +20,10 @@ public class WordRestController {
     public TranslationWordDto create(@PathVariable String word) {
         return wordService.translateWord(word);
     }
+
+    @RequestMapping(value = "translate/{word}", method = RequestMethod.GET)
+    @ResponseBody
+    public TranslationWordDto translateWord(@PathVariable String word) {
+        return wordService.translateWord(word);
+    }
 }

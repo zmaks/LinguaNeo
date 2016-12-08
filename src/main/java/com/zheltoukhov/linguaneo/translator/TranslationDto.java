@@ -1,17 +1,15 @@
-package com.zheltoukhov.linguaneo.dto;
+package com.zheltoukhov.linguaneo.translator;
 
 /**
- * Created by Maksim on 07.12.2016.
+ * Created by Maksim on 08.12.2016.
  */
-public class TranslationWordDto {
+public class TranslationDto {
     private String engValue;
     private String rusValue;
-    private boolean isExists;
 
-    public TranslationWordDto(String engValue, String rusValue, boolean isExists) {
+    public TranslationDto(String engValue, String rusValue) {
         this.engValue = engValue;
         this.rusValue = rusValue;
-        this.isExists = isExists;
     }
 
     public String getEngValue() {
@@ -28,13 +26,5 @@ public class TranslationWordDto {
 
     public void setRusValue(String rusValue) {
         this.rusValue = rusValue;
-    }
-
-    public boolean isExists() {
-        return isExists;
-    }
-
-    public void setExists(boolean exists) {
-        isExists = exists;
     }
 }
