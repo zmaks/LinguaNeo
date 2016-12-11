@@ -9,43 +9,30 @@ import static javax.persistence.GenerationType.IDENTITY;
  * Created by Maksim on 07.12.2016.
  */
 @Entity
-public class Word implements CommonEntity {
+public class Word{
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
+    private String eng;
+    private String rus;
+    private Integer mistakeIndex;
+    private Date lastUsage = new Date();
 
-    private String engValue;
-    private String rusValue;
-    private Integer mistakeIndex = 4;
-    private Date lastUsage;
-
-    @ManyToOne()
-    @JoinColumn(name = "groupId")
-    private WordsGroup group;
-
-    public Long getId() {
-        return id;
+    public String getEng() {
+        return eng;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setEng(String eng) {
+        this.eng = eng;
     }
 
-    public String getEngValue() {
-        return engValue;
+    public String getRus() {
+        return rus;
     }
 
-    public void setEngValue(String engValue) {
-        this.engValue = engValue;
-    }
-
-    public String getRusValue() {
-        return rusValue;
-    }
-
-    public void setRusValue(String rusValue) {
-        this.rusValue = rusValue;
+    public void setRus(String rus) {
+        this.rus = rus;
     }
 
     public Integer getMistakeIndex() {
@@ -64,11 +51,18 @@ public class Word implements CommonEntity {
         this.lastUsage = lastUsage;
     }
 
-    public WordsGroup getGroup() {
-        return group;
+    public Long getId() {
+        return id;
     }
 
-    public void setGroup(WordsGroup group) {
-        this.group = group;
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Word word = (Word) o;
+        return id.equals(word.id);
     }
 }

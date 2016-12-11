@@ -1,9 +1,6 @@
 package com.zheltoukhov.linguaneo.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,23 +11,19 @@ import static javax.persistence.GenerationType.IDENTITY;
  * Created by Maksim on 07.12.2016.
  */
 @Entity
-public class WordsGroup implements CommonEntity {
+public class WordsGroup {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
     private String name;
+    private boolean isHidden = false;
 
-    @OneToMany(mappedBy = "group")
+    @ManyToMany
+    @JoinTable(name = "group_word",
+            joinColumns = @JoinColumn(name = "word_id"),
+            inverseJoinColumns = @JoinColumn(name = "genre_id"))
     private List<Word> words = new ArrayList<Word>();
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
@@ -46,5 +39,25 @@ public class WordsGroup implements CommonEntity {
 
     public void setWords(List<Word> words) {
         this.words = words;
+    }
+
+    public void addWord(Word word){
+        words.add(word);
+    }
+
+    public boolean isHidden() {
+        return isHidden;
+    }
+
+    public void setHidden(boolean hidden) {
+        isHidden = hidden;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

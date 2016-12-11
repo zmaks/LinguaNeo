@@ -16,10 +16,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 @EnableWebMvc
 @EnableJpaRepositories
 @EnableTransactionManagement
-public class MainConfig extends WebMvcConfigurerAdapter {
+public class MainConf extends WebMvcConfigurerAdapter {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/assets/**").addResourceLocations("classpath:/assets/");
     }
-
 }

@@ -11,9 +11,15 @@ import java.util.List;
  */
 public interface WordRepository extends CrudRepository<Word, Long> {
 
-    @Query(value = "SELECT t FROM Word t WHERE engValue = ?1")
-    Word findByEngValue(String engValue);
+    @Query(value = "SELECT t FROM Word t WHERE eng = ?1")
+    Word findByEngValue(String eng);
 
-    @Query(value = "SELECT t FROM Word t WHERE rusValue = ?1")
-    Word findByRusValue(String rusValue);
+    @Query(value = "SELECT t FROM Word t WHERE rus = ?1")
+    Word findByRusValue(String rus);
+
+    @Query(value = "SELECT t FROM Word t where rownum() <= ?1 order by lastUsage")
+    List<Word> findOldest(Integer amount);
+
+    @Query(value = "SELECT t FROM Word t where rownum() <= ?1 and mistakeIndex > 3 order by mistakeIndex")
+    List<Word> findHardest(Integer amount);
 }

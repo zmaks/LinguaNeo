@@ -7,6 +7,8 @@ public class YandexRecognitionResponse {
     private String code;
     private String lang;
 
+    public YandexRecognitionResponse(){}
+
     public YandexRecognitionResponse(String code, String lang) {
         this.code = code;
         this.lang = lang;

@@ -1,6 +1,6 @@
 package com.zheltoukhov.linguaneo.app;
 
-import com.zheltoukhov.linguaneo.MainConfig;
+import com.zheltoukhov.linguaneo.MainConf;
 import org.springframework.boot.SpringApplication;
 
 /**
@@ -8,6 +8,6 @@ import org.springframework.boot.SpringApplication;
  */
 public class Launcher {
     public static void main(String[] args) {
-        SpringApplication.run(MainConfig.class);
+        SpringApplication.run(MainConf.class);
     }
 }
