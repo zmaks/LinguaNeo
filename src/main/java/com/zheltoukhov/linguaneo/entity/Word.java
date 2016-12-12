@@ -19,6 +19,10 @@ public class Word{
     private Integer mistakeIndex;
     private Date lastUsage = new Date();
 
+    @ManyToOne
+    @JoinColumn(name = "wordsGroupId")
+    private WordsGroup wordsGroup;
+
     public String getEng() {
         return eng;
     }
@@ -57,6 +61,14 @@ public class Word{
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public WordsGroup getWordsGroup() {
+        return wordsGroup;
+    }
+
+    public void setWordsGroup(WordsGroup wordsGroup) {
+        this.wordsGroup = wordsGroup;
     }
 
     @Override

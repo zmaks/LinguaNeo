@@ -20,6 +20,9 @@ public interface WordRepository extends CrudRepository<Word, Long> {
     @Query(value = "SELECT t FROM Word t where rownum() <= ?1 order by lastUsage")
     List<Word> findOldest(Integer amount);
 
-    @Query(value = "SELECT t FROM Word t where rownum() <= ?1 and mistakeIndex > 3 order by mistakeIndex")
-    List<Word> findHardest(Integer amount);
+    @Query(value = "SELECT t FROM Word t where rownum() <= ?1 and mistakeIndex > ?2 order by mistakeIndex")
+    List<Word> findHardest(Integer amount, Integer defaultMistakeInd);
+
+    @Query(value = "SELECT t FROM Word t where wordsGroupId = ?1")
+    List<Word> findByGroupId(Long wordsGroupId);
 }

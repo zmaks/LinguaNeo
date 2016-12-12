@@ -1,6 +1,5 @@
 package com.zheltoukhov.linguaneo.service;
 
-import com.zheltoukhov.linguaneo.entity.Word;
 import com.zheltoukhov.linguaneo.entity.WordsGroup;
 import com.zheltoukhov.linguaneo.repository.GroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,14 +29,24 @@ public class GroupService {
     }
 
     @Transactional
-    public void addWord(Long groupId, Word word){
-        WordsGroup group = groupRepository.findOne(groupId);
-        group.addWord(word);
-        groupRepository.save(group);
+    public WordsGroup create(String name){
+        WordsGroup group = new WordsGroup();
+        group.setName(name);
+        return groupRepository.save(group);
     }
 
     @Transactional
-    public List<Word> getWords(Long groupId){
-        return groupRepository.findOne(groupId).getWords();
+    public void delete(WordsGroup group){
+        groupRepository.delete(group);
+    }
+
+    @Transactional
+    public void delete(Long groupId){
+        groupRepository.delete(groupId);
+    }
+
+    @Transactional
+    public WordsGroup getById(Long id){
+        return groupRepository.findOne(id);
     }
 }

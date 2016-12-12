@@ -1,6 +1,7 @@
 package com.zheltoukhov.linguaneo.service;
 
 import com.zheltoukhov.linguaneo.dto.TranslationWordDto;
+import com.zheltoukhov.linguaneo.dto.UpdateGroupDto;
 import com.zheltoukhov.linguaneo.dto.WordDto;
 import com.zheltoukhov.linguaneo.entity.Word;
 import com.zheltoukhov.linguaneo.repository.WordRepository;
@@ -29,6 +30,9 @@ public class WordService {
     private WordRepository wordRepository;
 
     @Autowired
+    private GroupService groupService;
+
+    @Autowired
     private TranslationService translationService;
 
     public TranslationWordDto translateWord(@NotNull String word){
@@ -47,7 +51,7 @@ public class WordService {
 
     @Transactional
     public Word getWordFromDictionary(String word, Language language){
-        Word foundWord = null;
+        Word foundWord;
         if (Language.ENG.equals(language)){
             foundWord = wordRepository.findByEngValue(word);
         } else {
@@ -87,8 +91,9 @@ public class WordService {
     }
 
     @Transactional
-    public Word updateLastUsage(Word word){
+    public Word update(Word word, Integer mistakeInd){
         word.setLastUsage(new Date());
+        word.setMistakeIndex(mistakeInd);
         return wordRepository.save(word);
     }
 
@@ -109,6 +114,18 @@ public class WordService {
 
     @Transactional
     public List<Word> getHardest(Integer amount){
-        return wordRepository.findHardest(amount);
+        return wordRepository.findHardest(amount, DEFAULT_MISTAKE_INDEX);
+    }
+
+    @Transactional
+    public List<Word> getByGroupId(Long groupId){
+        return wordRepository.findByGroupId(groupId);
+    }
+
+    @Transactional
+    public Word updateGroup(UpdateGroupDto updateGroupDto){
+        Word word = wordRepository.findOne(updateGroupDto.getWordId());
+        word.setWordsGroup(groupService.getById(updateGroupDto.getGroupId()));
+        return wordRepository.save(word);
     }
 }

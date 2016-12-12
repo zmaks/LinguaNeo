@@ -19,11 +19,11 @@ public class WordsGroup {
     private String name;
     private boolean isHidden = false;
 
-    @ManyToMany
+   /* @ManyToMany
     @JoinTable(name = "group_word",
             joinColumns = @JoinColumn(name = "word_id"),
             inverseJoinColumns = @JoinColumn(name = "genre_id"))
-    private List<Word> words = new ArrayList<Word>();
+    private List<Word> words = new ArrayList<Word>();*/
 
     public String getName() {
         return name;
@@ -33,7 +33,7 @@ public class WordsGroup {
         this.name = name;
     }
 
-    public List<Word> getWords() {
+    /*public List<Word> getWords() {
         return words;
     }
 
@@ -43,7 +43,7 @@ public class WordsGroup {
 
     public void addWord(Word word){
         words.add(word);
-    }
+    }*/
 
     public boolean isHidden() {
         return isHidden;

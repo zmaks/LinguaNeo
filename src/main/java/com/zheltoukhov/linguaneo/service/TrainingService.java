@@ -36,7 +36,7 @@ public class TrainingService {
     public TrainingDto getTrainingData(Long groupId){
         List<Word> words = new ArrayList<Word>();
         if (groupId != null)
-            words.addAll(groupService.getWords(groupId));
+            words.addAll(wordService.getByGroupId(groupId));
         else
             words.addAll(generateWordsList());
         Training training = createTraining();
@@ -46,12 +46,10 @@ public class TrainingService {
     public TrainingCheckAnswer checkAnswer(TrainingCheckAnswer answer){
         Word word = wordService.getByEngValue(answer.getQuestion());
         if (word == null) throw new IllegalArgumentException("This word has been already deleted");
-        if(answer.getAnswer().equalsIgnoreCase(word.getRus())){
-            answer.setCorrect(true);
-        }else {
-            answer.setCorrect(false);
-        }
-        wordService.updateLastUsage(word);
+        boolean isAnswerCorrect = answer.getAnswer().equalsIgnoreCase(word.getRus());
+        Integer mistakeInd = getNewMistakeIndex(isAnswerCorrect, word.getMistakeIndex());
+        answer.setCorrect(isAnswerCorrect);
+        wordService.update(word, mistakeInd);
         return answer;
     }
 
@@ -74,7 +72,6 @@ public class TrainingService {
     private List<TrainingWordDto> createTrainingWords(List<Word> words){
         List<TrainingWordDto> result = new ArrayList<TrainingWordDto>();
         for (Word word : words) {
-            wordService.updateLastUsage(word);
             result.add(new TrainingWordDto(word.getEng(), generateAnswersWords(word)));
         }
         Collections.shuffle(result);
@@ -90,5 +87,14 @@ public class TrainingService {
         }
         Collections.shuffle(answers);
         return answers;
+    }
+
+    private Integer getNewMistakeIndex(boolean isAnswerCorrect, Integer mistakeInd){
+        Integer resultInd;
+        if(isAnswerCorrect)
+            resultInd = mistakeInd != 0 ? mistakeInd-1 : 0;
+        else
+            resultInd = mistakeInd > DEFAULT_MISTAKE_INDEX ? mistakeInd+1 : DEFAULT_MISTAKE_INDEX+1;
+        return resultInd;
     }
 }
