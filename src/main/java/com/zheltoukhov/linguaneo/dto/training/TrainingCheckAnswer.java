@@ -8,18 +8,21 @@ public class TrainingCheckAnswer {
     private String answer;
     private String question;
 
-    public boolean isCorrect() {
-        return isCorrect;
-    }
-
-    public void setCorrect(boolean correct) {
-        isCorrect = correct;
+    public TrainingCheckAnswer() {
     }
 
     public TrainingCheckAnswer(boolean isCorrect, String answer) {
 
         this.isCorrect = isCorrect;
         this.answer = answer;
+    }
+
+    public boolean isCorrect() {
+        return isCorrect;
+    }
+
+    public void setCorrect(boolean correct) {
+        isCorrect = correct;
     }
 
     public String getAnswer() {

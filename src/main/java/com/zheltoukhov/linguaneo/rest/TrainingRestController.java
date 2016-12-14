@@ -1,5 +1,6 @@
 package com.zheltoukhov.linguaneo.rest;
 
+import com.zheltoukhov.linguaneo.dto.training.TrainingCheckAnswer;
 import com.zheltoukhov.linguaneo.dto.training.TrainingDto;
 import com.zheltoukhov.linguaneo.service.TrainingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,5 +26,11 @@ public class TrainingRestController {
     @ResponseBody
     public TrainingDto getTrainingData(){
         return trainingService.getTrainingData(null);
+    }
+
+    @RequestMapping(value = "/", method = RequestMethod.POST)
+    @ResponseBody
+    public TrainingCheckAnswer check(@RequestBody TrainingCheckAnswer answer){
+        return trainingService.checkAnswer(answer);
     }
 }

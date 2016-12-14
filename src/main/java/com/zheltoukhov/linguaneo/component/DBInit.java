@@ -34,12 +34,14 @@ public class DBInit {
         Word word1 = new Word();
         word1.setEng("dog");
         word1.setRus("собака");
+        word1.setMistakeIndex(3);
         word1.setWordsGroup(group);
         wordRepository.save(word1);
 
         Word word2 = new Word();
         word2.setEng("cat");
         word2.setRus("кошка");
+        word2.setMistakeIndex(3);
         word2.setWordsGroup(group);
         wordRepository.save(word2);
 
