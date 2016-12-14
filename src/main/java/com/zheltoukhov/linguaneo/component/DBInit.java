@@ -29,25 +29,19 @@ public class DBInit {
     public void init(){
         WordsGroup group = new WordsGroup();
         group.setName("GR1");
-
+        groupRepository.save(group);
 
         Word word1 = new Word();
         word1.setEng("dog");
         word1.setRus("собака");
-        //word1.setGroup(group);
+        word1.setWordsGroup(group);
         wordRepository.save(word1);
 
         Word word2 = new Word();
         word2.setEng("cat");
         word2.setRus("кошка");
-        //word2.setGroup(group);
+        word2.setWordsGroup(group);
         wordRepository.save(word2);
-
-        List<Word> words = new ArrayList<Word>();
-        words.add(word1);
-        words.add(word2);
-        group.setWords(words);
-        groupRepository.save(group);
 
     }
 }

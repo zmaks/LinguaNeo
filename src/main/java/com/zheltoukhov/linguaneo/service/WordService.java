@@ -1,8 +1,8 @@
 package com.zheltoukhov.linguaneo.service;
 
-import com.zheltoukhov.linguaneo.dto.TranslationWordDto;
-import com.zheltoukhov.linguaneo.dto.UpdateGroupDto;
-import com.zheltoukhov.linguaneo.dto.WordDto;
+import com.zheltoukhov.linguaneo.dto.translation.TranslationWordDto;
+import com.zheltoukhov.linguaneo.dto.word.UpdateGroupDto;
+import com.zheltoukhov.linguaneo.dto.word.WordDto;
 import com.zheltoukhov.linguaneo.entity.Word;
 import com.zheltoukhov.linguaneo.repository.WordRepository;
 import com.zheltoukhov.linguaneo.translator.Language;
@@ -127,5 +127,10 @@ public class WordService {
         Word word = wordRepository.findOne(updateGroupDto.getWordId());
         word.setWordsGroup(groupService.getById(updateGroupDto.getGroupId()));
         return wordRepository.save(word);
+    }
+
+    @Transactional
+    public void delete(Long id) {
+        wordRepository.delete(id);
     }
 }

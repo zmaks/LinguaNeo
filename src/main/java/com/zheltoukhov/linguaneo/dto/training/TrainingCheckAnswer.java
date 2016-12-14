@@ -1,4 +1,4 @@
-package com.zheltoukhov.linguaneo.dto;
+package com.zheltoukhov.linguaneo.dto.training;
 
 /**
  * Created by Maksim on 11.12.2016.

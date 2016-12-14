@@ -15,4 +15,9 @@ import java.lang.annotation.Target;
 @Target({ElementType.FIELD, ElementType.PARAMETER})
 @Constraint(validatedBy=WordValidator.class)
 public @interface ValidWord {
+    String message();
+
+    Class[] groups() default {};
+
+    Class[] payload() default {};
 }

@@ -1,8 +1,8 @@
 package com.zheltoukhov.linguaneo.service;
 
-import com.zheltoukhov.linguaneo.dto.TrainingCheckAnswer;
-import com.zheltoukhov.linguaneo.dto.TrainingDto;
-import com.zheltoukhov.linguaneo.dto.TrainingWordDto;
+import com.zheltoukhov.linguaneo.dto.training.TrainingCheckAnswer;
+import com.zheltoukhov.linguaneo.dto.training.TrainingDto;
+import com.zheltoukhov.linguaneo.dto.training.TrainingWordDto;
 import com.zheltoukhov.linguaneo.entity.Training;
 import com.zheltoukhov.linguaneo.entity.Word;
 import com.zheltoukhov.linguaneo.repository.TrainingRepository;
@@ -20,18 +20,13 @@ import static com.zheltoukhov.linguaneo.Constants.*;
 @Service
 public class TrainingService {
 
+    @Autowired
     private WordService wordService;
 
     private GroupService groupService;
 
     @Autowired
     private TrainingRepository trainingRepository;
-
-    @Autowired
-    public TrainingService(WordService wordService, GroupService groupService) {
-        this.wordService = wordService;
-        this.groupService = groupService;
-    }
 
     public TrainingDto getTrainingData(Long groupId){
         List<Word> words = new ArrayList<Word>();

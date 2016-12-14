@@ -1,11 +1,13 @@
 package com.zheltoukhov.linguaneo.service;
 
-import com.zheltoukhov.linguaneo.dto.TranslationWordDto;
+import com.zheltoukhov.linguaneo.dto.translation.TranslationWordDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -20,12 +22,15 @@ public class TextService {
     @Autowired
     private WordService wordService;
 
-    public List<TranslationWordDto> parseAndTranslateText(String text){
-        //List<String> parsedText = new ArrayList<String>();
-        List<TranslationWordDto> result = new ArrayList<TranslationWordDto>();
+    public Set<TranslationWordDto> parseAndTranslateText(String text){
+        Set<TranslationWordDto> result = new HashSet<TranslationWordDto>();
+        Set<String> words = new HashSet<String>();
         Matcher matcher = Pattern.compile(WORD_REGEXP_IN_TEXT_REGEXP).matcher(text);
         while(matcher.find()) {
-            result.add(wordService.translateWord(matcher.group()));
+            words.add(matcher.group());
+        }
+        for(String word : words){
+            result.add(wordService.translateWord(word));
         }
         return result;
     }

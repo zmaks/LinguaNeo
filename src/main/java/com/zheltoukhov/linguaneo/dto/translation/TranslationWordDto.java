@@ -1,9 +1,11 @@
-package com.zheltoukhov.linguaneo.dto;
+package com.zheltoukhov.linguaneo.dto.translation;
+
+import com.zheltoukhov.linguaneo.dto.word.WordDto;
 
 /**
  * Created by Maksim on 07.12.2016.
  */
-public class TranslationWordDto extends WordDto{
+public class TranslationWordDto extends WordDto {
     private boolean isExists;
 
     public TranslationWordDto(String engValue, String rusValue, boolean isExists) {
@@ -18,4 +20,5 @@ public class TranslationWordDto extends WordDto{
     public void setExists(boolean exists) {
         isExists = exists;
     }
+
 }

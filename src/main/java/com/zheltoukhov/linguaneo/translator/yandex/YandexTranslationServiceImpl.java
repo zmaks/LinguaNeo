@@ -57,12 +57,10 @@ public class YandexTranslationServiceImpl implements TranslationService {
     }
 
     private YandexTranslationResponse translateWord(String word, Language source, Language target){
-        YandexTranslationResponse response = restTemplate.getForObject(
+        return restTemplate.getForObject(
                 buildTranslationURL(word, source, target),
                 YandexTranslationResponse.class
         );
-
-        return response;
     }
 
     private String buildTranslationURL(String text, Language source, Language target){

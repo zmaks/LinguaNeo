@@ -1,4 +1,4 @@
-package com.zheltoukhov.linguaneo.dto;
+package com.zheltoukhov.linguaneo.dto.training;
 
 import java.util.List;
 

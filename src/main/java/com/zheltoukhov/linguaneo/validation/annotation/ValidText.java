@@ -1,5 +1,6 @@
 package com.zheltoukhov.linguaneo.validation.annotation;
 
+import com.zheltoukhov.linguaneo.validation.TextValidator;
 import com.zheltoukhov.linguaneo.validation.WordValidator;
 
 import javax.validation.Constraint;
@@ -13,6 +14,11 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.PARAMETER})
-@Constraint(validatedBy=WordValidator.class)
+@Constraint(validatedBy=TextValidator.class)
 public @interface ValidText {
+    String message();
+
+    Class[] groups() default {};
+
+    Class[] payload() default {};
 }

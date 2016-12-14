@@ -1,6 +1,6 @@
 package com.zheltoukhov.linguaneo.rest;
 
-import com.zheltoukhov.linguaneo.dto.TrainingDto;
+import com.zheltoukhov.linguaneo.dto.training.TrainingDto;
 import com.zheltoukhov.linguaneo.service.TrainingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

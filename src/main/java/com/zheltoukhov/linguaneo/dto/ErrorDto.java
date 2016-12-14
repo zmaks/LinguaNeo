@@ -5,11 +5,11 @@ package com.zheltoukhov.linguaneo.dto;
  */
 public class ErrorDto {
     private String field;
-    private String message;
+    private String errorMessage;
 
     public ErrorDto(String field, String message) {
         this.field = field;
-        this.message = message;
+        this.errorMessage = message;
     }
 
     public String getField() {
@@ -20,11 +20,11 @@ public class ErrorDto {
         this.field = field;
     }
 
-    public String getMessage() {
-        return message;
+    public String getErrorMessage() {
+        return errorMessage;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
     }
 }
