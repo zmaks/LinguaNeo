@@ -21,12 +21,13 @@ public class TextParsingTest {
     @Test
     public void parserTest(){
         Set<String> words = textService.parseText(text);
-        Assert.assertEquals(5, words.size());
+        Assert.assertEquals(6, words.size());
         Assert.assertTrue(words.contains("dog"));
         Assert.assertTrue(words.contains("Кошка"));
         Assert.assertTrue(words.contains("doooooooooooooooooor"));
         Assert.assertTrue(words.contains("АПЕЛЬСИН"));
         Assert.assertTrue(words.contains("HappyNewYear"));
+        Assert.assertTrue(words.contains("rock"));
         Assert.assertTrue(!words.contains("boooooooooooooooooooooook"));
         Assert.assertTrue(!words.contains("ok"));
         Assert.assertTrue(!words.contains("234134"));

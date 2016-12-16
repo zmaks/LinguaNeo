@@ -32,7 +32,7 @@ public class TextService {
 
     public Set<String> parseText(String text){
         Set<String> words = new HashSet<String>();
-        text = ("%"+text+"%").replace(" ", "%%");
+        text = ("%"+text+"%").replaceAll("[,.?!;:''\"\\s]", "%%");
         Matcher matcher = Pattern.compile(WORD_REGEXP_IN_TEXT_REGEXP).matcher(text);
         while(matcher.find()) {
             words.add(matcher.group().replace("%",""));
