@@ -41,7 +41,7 @@ public class DBInit {
         Word word2 = new Word();
         word2.setEng("cat");
         word2.setRus("кошка");
-        word2.setMistakeIndex(3);
+        word2.setMistakeIndex(0);
         word2.setWordsGroup(group);
         wordRepository.save(word2);
 

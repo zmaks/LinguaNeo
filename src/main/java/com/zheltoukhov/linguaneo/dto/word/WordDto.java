@@ -7,7 +7,7 @@ public class WordDto {
     private String eng;
     private String rus;
 
-    public  WordDto(){}
+    public WordDto(){}
 
     public WordDto(String eng, String rus) {
         this.eng = eng;

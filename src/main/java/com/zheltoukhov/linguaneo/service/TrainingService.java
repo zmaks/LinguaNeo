@@ -23,8 +23,6 @@ public class TrainingService {
     @Autowired
     private WordService wordService;
 
-    private GroupService groupService;
-
     @Autowired
     private TrainingRepository trainingRepository;
 
@@ -34,13 +32,14 @@ public class TrainingService {
             words.addAll(wordService.getByGroupId(groupId));
         else
             words.addAll(generateWordsList());
-        Training training = createTraining();
-        return new TrainingDto(training.getId(), createTrainingWords(words));
+        Training training = create();
+        List<TrainingWordDto> trainingWordList = createTrainingWords(words);
+        updateTrainingWordsAmount(training, trainingWordList.size());
+        return new TrainingDto(training.getId(), trainingWordList);
     }
 
     public TrainingCheckAnswer checkAnswer(TrainingCheckAnswer answer){
         Word word = wordService.getByEngValue(answer.getQuestion());
-        if (word == null) throw new IllegalArgumentException("This word has been already deleted");
         boolean isAnswerCorrect = answer.getAnswer().equalsIgnoreCase(word.getRus());
         Integer mistakeInd = getNewMistakeIndex(isAnswerCorrect, word.getMistakeIndex());
         answer.setCorrect(isAnswerCorrect);
@@ -49,19 +48,43 @@ public class TrainingService {
     }
 
     @Transactional
-    private Training createTraining(){
+    public Training update(Long id, Integer mistakes){
+        Training training = trainingRepository.findOne(id);
+        training.setMistakesAmount(mistakes);
+        training.setTrainingDate(new Date());
+        return trainingRepository.save(training);
+    }
+
+    @Transactional
+    private Training create(){
         Training training = new Training();
         training.setTrainingDate(new Date());
         training.setWordsAmount(TRAINING_WORDS_AMOUNT);
         return trainingRepository.save(training);
     }
 
-    private Set<Word> generateWordsList(){
-        Set<Word> result = new HashSet<Word>(TRAINING_WORDS_AMOUNT);
+    public List<Training> getAll(){
+        List<Training> trainings = new ArrayList<Training>();
+        for (Training training : trainingRepository.findAll())
+            trainings.add(training);
+        return trainings;
+    }
+
+    private List<Word> generateWordsList(){
+        LinkedList<Word> result = new LinkedList<Word>();
         Integer hardestWordsAmount = Math.round(TRAINING_WORDS_AMOUNT * HARDEST_WORDS_PERCENT);
-        result.addAll(wordService.getHardest(hardestWordsAmount));
-        result.addAll(wordService.getOldest(TRAINING_WORDS_AMOUNT-result.size()));
-        return result;
+        List<Word> oldest = wordService.getOldest(TRAINING_WORDS_AMOUNT);//-result.size()));
+        result.addAll(oldest);
+        if(result.size()==TRAINING_WORDS_AMOUNT){
+            List<Word> hardest = wordService.getHardest(hardestWordsAmount);
+            for(Word word : hardest){
+                if (!result.contains(word)){
+                    result.addFirst(word);
+                    result.removeLast();
+                }
+            }
+        }
+        return result   ;
     }
 
     private List<TrainingWordDto> createTrainingWords(List<Word> words){
@@ -91,5 +114,11 @@ public class TrainingService {
         else
             resultInd = mistakeInd > DEFAULT_MISTAKE_INDEX ? mistakeInd+1 : DEFAULT_MISTAKE_INDEX+1;
         return resultInd;
+    }
+
+    @Transactional
+    private void updateTrainingWordsAmount(Training training, int size) {
+        training.setWordsAmount(size);
+        trainingRepository.save(training);
     }
 }

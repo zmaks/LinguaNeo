@@ -1,6 +1,7 @@
 package com.zheltoukhov.linguaneo.repository;
 
 import com.zheltoukhov.linguaneo.entity.Word;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
@@ -11,18 +12,19 @@ import java.util.List;
  */
 public interface WordRepository extends CrudRepository<Word, Long> {
 
-    @Query(value = "SELECT t FROM Word t WHERE eng = ?1")
-    Word findByEngValue(String eng);
+    Word findByEng(String eng);
 
-    @Query(value = "SELECT t FROM Word t WHERE rus = ?1")
-    Word findByRusValue(String rus);
+    Word findByRus(String rus);
 
-    @Query(value = "SELECT t FROM Word t where rownum() <= ?1 order by lastUsage")
-    List<Word> findOldest(Integer amount);
+    List<Word> findByWordsGroupId(Long groupId);
+
+    List<Word> findByOrderByLastUsageAsc(Pageable pageable);
 
     @Query(value = "SELECT t FROM Word t where rownum() <= ?1 and mistakeIndex > ?2 order by mistakeIndex")
     List<Word> findHardest(Integer amount, Integer defaultMistakeInd);
 
-    @Query(value = "SELECT t FROM Word t where wordsGroupId = ?1")
-    List<Word> findByGroupId(Long wordsGroupId);
+    Long countByMistakeIndex(Integer mistakeIndex);
+
+    Word findTopByOrderByMistakeIndexDesc();
+
 }

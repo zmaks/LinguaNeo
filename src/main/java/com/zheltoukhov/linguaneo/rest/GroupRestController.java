@@ -1,5 +1,6 @@
 package com.zheltoukhov.linguaneo.rest;
 
+import com.zheltoukhov.linguaneo.dto.group.CreateGroupDto;
 import com.zheltoukhov.linguaneo.entity.WordsGroup;
 import com.zheltoukhov.linguaneo.service.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +26,10 @@ public class GroupRestController {
         return groupService.getAllGroups();
     }
 
-    @RequestMapping(value = "/{name}", method = RequestMethod.POST)
+    @RequestMapping(value = "/", method = RequestMethod.POST)
     @ResponseBody
-    public WordsGroup create(String name) {
-        return groupService.create(name);
+    public WordsGroup create(@RequestBody CreateGroupDto group) {
+        return groupService.create(group.getName());
     }
 
     @RequestMapping(value = "/{groupId}", method = RequestMethod.DELETE)

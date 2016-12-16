@@ -3,15 +3,9 @@
 <script xmlns="http://www.w3.org/1999/html">
 $(document).ready(function() {
     fillTable();
+    loadGroups();
     $("#dictId").click(function () {
         fillTable();
-    });
-
-    $.getJSON('/rest/groups/', function (data) {
-        var count = data.length;
-        for (var i = 0; i < count; i++) {
-            addToDropDown(data[i]);
-        }
     });
 
     $("#trans-button").click(function () {
@@ -106,6 +100,29 @@ $(document).ready(function() {
         } else {
             btn.attr('disabled', 'disabled');
         }
+    });
+
+    $("#create-gr-btn").click(function () {
+        var inp = $("#group-name")
+        var name = inp.val();
+        $.ajax({
+            method: "POST",
+            url: "/rest/groups/",
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify({
+                name: name
+            }),
+            success: function (response) {
+                loadGroups();
+                $('#group-modal').modal('toggle');
+                inp.val('');
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                var jsonValue = jQuery.parseJSON(xhr.responseText);
+                alert(jsonValue[0].errorMessage);
+                alert(thrownError);
+            }
+        });
     });
 
     $("#delete-btn").click(function () {
@@ -204,30 +221,16 @@ $(document).ready(function() {
 
     // Trainig functions:
     $("#training-btn").click(function () {
-        $("#next-btn").show();//removeClass("disabled");
-        $.ajax({
-            method: "GET",
-            url: "/rest/training/",
-            contentType: 'application/json; charset=utf-8',
-            success: function (response) {
-                trainingWords = response.words;
-                addToTraining();
-                $('#training-modal').modal('toggle');
-
-            },
-            error: function (xhr, ajaxOptions, thrownError) {
-                var jsonValue = jQuery.parseJSON(xhr.responseText);
-                alert(jsonValue[0].errorMessage);
-                alert(thrownError);
-            }
-        });
+        startTraining(null);
     });
 
     $("#ans-btns").on('click', '.answer-btn', function () {
         var question = $("#question").text();
         var ans = $(this);
         var ansTxt = ans.text();
-
+        for(var i = 0; i < trainingWords.length; i++){
+            console.log(trainingWords[i].question);
+        }
         $.ajax({
             method: "POST",
             url: "/rest/training/",
@@ -267,9 +270,23 @@ $(document).ready(function() {
             var q = $("#question");
             q.empty();
             q.append("<h2>Тренировка закончена!</h2><h4>Количество правильных ответов: "+trueAnsCount+"</h4><h4> Всего слов: "+amount+"</h4>")
+            $.ajax({
+                method: "PUT",
+                url: "/rest/training/",
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify({
+                    id: trainingId,
+                    mistakes: (amount-trueAnsCount)
+                }),
+                error: function (xhr, ajaxOptions, thrownError) {
+                    var jsonValue = jQuery.parseJSON(xhr.responseText);
+                    alert(jsonValue[0].errorMessage);
+                    alert(thrownError);
+                }
+            });
             $(this).hide();//toggleClass("disabled")
             wordInd=0;
-            trueAns = 0;
+            trueAnsCount = 0;
         } else {
             addToTraining();
         }
@@ -278,6 +295,7 @@ $(document).ready(function() {
 var trainingWords;
 var wordInd = 0;
 var trueAnsCount = 0;
+var trainingId = 0;
 
 function addToTraining() {
     var word = trainingWords[wordInd];
@@ -292,8 +310,25 @@ function addToTraining() {
     }
 }
 
-function createWord(eng, rus) {
+function startTraining(groupId) {
+    $("#next-btn").show();//removeClass("disabled");
+    $.ajax({
+        method: "GET",
+        url: "/rest/training/"+ (groupId == null ? '' : groupId),
+        contentType: 'application/json; charset=utf-8',
+        success: function (response) {
+            trainingWords = response.words;
+            trainingId = response.id;
+            addToTraining();
+            $('#training-modal').modal('toggle');
 
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            var jsonValue = jQuery.parseJSON(xhr.responseText);
+            alert(jsonValue[0].errorMessage);
+            alert(thrownError);
+        }
+    });
 }
 
 function fillTable() {
@@ -306,6 +341,48 @@ function fillTable() {
     });
 }
 
+function fillStat() {
+    var progBar = $("#prog-bar");
+    var progMBar = $("#prog-m-bar");
+    var hword = $("#hard-word");
+    var table = $("#train-table");
+
+    $.getJSON('/rest/statistic/', function(data) {
+        progBar.css("width",function(i){
+            var all = data.allCount;
+            var ler = data.learnedCount;
+            var res = Math.floor((ler / all) * 100);
+            var percent = res+'%';
+            progBar.empty();
+            progBar.append(percent);
+            return percent;
+        });
+        progMBar.css("width",function(i){
+            var percent = data.mistakesPercent+'%';
+            progMBar.empty();
+            progMBar.append(percent);
+            return percent;
+        });
+        hword.empty();
+        hword.append(data.difficultWord.eng + " - " + data.difficultWord.rus);
+        $(".tr-row").remove();
+        var trainings = data.trainings;
+        for (var i = 0; i < trainings.length; i++) {
+            var fragTrow = $("<tr class='tr-row'>").appendTo(table);
+            var am = trainings[i].wordsAmount;
+            var mis = trainings[i].mistakesAmount;
+            $("<td>").appendTo(fragTrow).html(trainings[i].id);
+            $("<td>").appendTo(fragTrow).html((new Date(trainings[i].trainingDate)).toLocaleString());
+            $("<td>").appendTo(fragTrow).html(am);
+            $("<td>").appendTo(fragTrow).html(mis);
+            var per = Math.floor(((am-mis) / am) * 100);
+            if(per > 79) fragTrow.toggleClass('success');
+            if(per > 50 && per < 80) fragTrow.toggleClass('warning');
+            if(per < 51 && per > 0) fragTrow.toggleClass('danger');
+        }
+    });
+}
+
 function addToTable(data) {
     var aTable = $("#dict-table");
 
@@ -313,13 +390,34 @@ function addToTable(data) {
 	$("<td class='word-id'>").appendTo(fragTrow).html(data.id);
 	$("<td>").appendTo(fragTrow).html(data.eng);
 	$("<td>").appendTo(fragTrow).html(data.rus);
+	var grName = data.wordsGroup ? data.wordsGroup.name : '';
+	$("<td>").appendTo(fragTrow).html(grName);
 	$("<td>").appendTo(fragTrow).html("<input class='check' type='checkbox' value='yes'>");
+	if (data.mistakeIndex==0) fragTrow.toggleClass('success');
+	if (data.mistakeIndex>0&&data.mistakeIndex<4) fragTrow.toggleClass('warning');
+	if (data.mistakeIndex>3) fragTrow.toggleClass('danger');
 }
 
-function addToDropDown(data) {
-    var drop = $("#drop");
-    drop.append("<li><a onclick=\"addToGroup("+data.id+")\">"+data.name+"</a></li>")
+function addGroupOpenModal() {
+    $('#group-modal').modal('toggle');
 }
+
+function loadGroups() {
+    $.getJSON('/rest/groups/', function (data) {
+        var drop = $("#drop");
+        var dropTr = $("#drop-train");
+        drop.empty();
+        dropTr.empty();
+        for (var i = 0; i < data.length; i++) {
+            drop.append("<li><a onclick='addToGroup(" + data[i].id + ")'>" + data[i].name + "</a></li>");
+            dropTr.append("<li><a onclick='startTraining(" + data[i].id + ")'>" + data[i].name + "</a></li>");
+        }
+        drop.append("<li class='divider'></li>");
+        drop.append("<li class='bg-success'><a onclick='addGroupOpenModal()'><span class='glyphicon glyphicon-plus'></span> Создать группу</a></li>")
+    });
+
+}
+
 function searchWords() {
     // Declare variables
     var input, filter, table, tr, eng, rus, i;
@@ -343,7 +441,7 @@ function searchWords() {
 }
 
 function addToGroup(id) {
-    $('input[type=checkbox]').each(function() {
+    $('input.check:checkbox').each(function() {
         if ($(this).is(":checked")) {
             var wordId = parseInt($(this).closest('tr').find('.word-id').text(), 10);
             $.ajax({
@@ -360,6 +458,7 @@ function addToGroup(id) {
             })
         }
     });
+    fillTable();
 }
 
 </script>
@@ -370,6 +469,7 @@ function addToGroup(id) {
 		  <li class="active" id="dictId"><a data-toggle="tab" href="#dict">Словарь</a></li>
 		  <li><a data-toggle="tab" href="#menu1">Перевод текста</a></li>
 		  <li><a data-toggle="tab" href="#menu2">Тренировка</a></li>
+		  <li><a data-toggle="tab" href="#menu3" onclick="fillStat()">Статистика</a></li>
 		</ul>
 
 		<div class="tab-content">
@@ -408,8 +508,9 @@ function addToGroup(id) {
 			  <table id="dict-table" class="table table-hover">
 				<tr>
 					<th class="col-xs-1">#</th>
-					<th>English</th>
-					<th>Русский</th>
+					<th class="col-xs-4">English</th>
+					<th class="col-xs-4">Русский</th>
+					<th class="col-xs-3">Группа</th>
 					<th class="col-xs-1"><input type="checkbox" id="check-all-dict"></th>
 				</tr>
 			  </table>
@@ -467,14 +568,68 @@ function addToGroup(id) {
                           <h4> Вам поочередно будет предложены несколько английских слов из Вашего словаря и по несколько вариантов ответов на русском языке для каждого. <br>Удачи!</h4>
                       </div>
                       <div class="col-md-3">
-                          <button id="training-btn" class="btn btn-success" type="button" >
+                          <button id="training-btn" class="btn btn-success" type="button" style="margin-top: 5px">
                               <span class="glyphicon glyphicon-play-circle"></span> Начать тренировку
                           </button>
+                          <div class="btn-group" style="margin-top: 5px">
+                              <button id="train-gr-btn" class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  Тренировка группы <span class="caret"></span>
+                              </button>
+                              <ul id="drop-train" class="dropdown-menu">
+                              </ul>
+                          </div>
                       </div>
                   </div>
 
               </div>
 		  </div>
+            <div id="menu3" class="tab-pane fade">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h3>Ваш прогресс</h3>
+                            <h6 style="color: grey">Процент изученных слов. Изученным является слово, которое Вы правильно перевели 3 и более раз.</h6>
+
+                            <div class="progress">
+                                <div id="prog-bar" class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:40%">
+                                </div>
+                            </div>
+                            <h3>Процент ошибок в тренировках:</h3>
+                            <div class="progress">
+                                <div id="prog-m-bar" class="progress-bar progress-bar-danger progress-bar-striped" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:70%">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="panel panel-danger">
+                                <div class="panel-heading">Одно из самых сложных для Вас слов</div>
+                                <div class="panel-body" style="text-align: center">
+                                    <h2 id="hard-word"></h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">Пройденные тренеровки</div>
+                                <div class="panel-body">
+                                    <table id="train-table" class="table table-hover">
+                                        <tr>
+                                            <th class="col-xs-1">#</th>
+                                            <th>Дата</th>
+                                            <th>Изучено слов</th>
+                                            <th>Кол-во ошибок</th>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 		</div>
     </div>
 </div>
@@ -530,4 +685,32 @@ function addToGroup(id) {
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+<div class="modal fade bs-example-modal-sm" id="group-modal" tabindex="-1" role="dialog" aria-labelledby="trainingModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="gridSystemModalLabel">Создание группы</h4>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                <div class="row" style="margin-top: 10px">
+                    <div class="col-md-10 col-md-offset-1">
+                        <div class="input-group">
+                            <span class="input-group-addon" id="basic-addon3">Название</span>
+                            <input id="group-name" type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                <button id="create-gr-btn" type="button" class="btn btn-primary">Создать</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
 <#include "/part/footer.ftl">

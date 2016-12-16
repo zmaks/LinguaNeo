@@ -9,6 +9,7 @@ import com.zheltoukhov.linguaneo.translator.Language;
 import com.zheltoukhov.linguaneo.translator.TranslationDto;
 import com.zheltoukhov.linguaneo.translator.TranslationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,9 +54,9 @@ public class WordService {
     public Word getWordFromDictionary(String word, Language language){
         Word foundWord;
         if (Language.ENG.equals(language)){
-            foundWord = wordRepository.findByEngValue(word);
+            foundWord = wordRepository.findByEng(word);
         } else {
-            foundWord = wordRepository.findByRusValue(word);
+            foundWord = wordRepository.findByRus(word);
         }
         return foundWord;
     }
@@ -99,17 +100,18 @@ public class WordService {
 
     @Transactional
     public Word getByRusValue(String value){
-        return wordRepository.findByRusValue(value);
+        return wordRepository.findByRus(value);
     }
 
     @Transactional
     public Word getByEngValue(String value){
-        return wordRepository.findByEngValue(value);
+        return wordRepository.findByEng(value);
     }
 
     @Transactional
     public List<Word> getOldest(Integer amount){
-        return wordRepository.findOldest(amount);
+        //return wordRepository.findOldest(amount);
+        return wordRepository.findByOrderByLastUsageAsc(new PageRequest(0, amount));
     }
 
     @Transactional
@@ -119,7 +121,7 @@ public class WordService {
 
     @Transactional
     public List<Word> getByGroupId(Long groupId){
-        return wordRepository.findByGroupId(groupId);
+        return wordRepository.findByWordsGroupId(groupId);
     }
 
     @Transactional
@@ -132,5 +134,17 @@ public class WordService {
     @Transactional
     public void delete(Long id) {
         wordRepository.delete(id);
+    }
+
+    public Long countByMistakeIndex(Integer mistakeIndex){
+        return wordRepository.countByMistakeIndex(mistakeIndex);
+    }
+
+    public Long getCount(){
+        return wordRepository.count();
+    }
+
+    public Word getHardestWord(){
+        return wordRepository.findTopByOrderByMistakeIndexDesc();
     }
 }
