@@ -5,7 +5,6 @@
         <div id="alert-div" style="margin-top: 20px">
         </div>
 
-
 		<ul class="nav nav-tabs">
 		  <li class="active" id="dictId"><a data-toggle="tab" href="#dict">Словарь</a></li>
 		  <li><a data-toggle="tab" href="#menu1">Перевод текста</a></li>

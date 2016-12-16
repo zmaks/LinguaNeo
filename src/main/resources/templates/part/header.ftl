@@ -38,3 +38,9 @@
     </style>
 </head>
 <body>
+<div class="row">
+    <div class="col-md-6 col-md-offset-3">
+            <h1 style="font-size: 50px">Lingua<span style="color: dodgerblue">Neo</span></h1>
+            <p>Сервис для изучения английских слов</p>
+    </div>
+</div>
