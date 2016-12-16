@@ -5,6 +5,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.util.Date;
 
+import static com.zheltoukhov.linguaneo.Constants.TRAINING_WORDS_AMOUNT;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
@@ -14,7 +15,7 @@ public class Training {
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
     private Integer wordsAmount;
-    private Integer mistakesAmount = 0;
+    private Integer mistakesAmount = TRAINING_WORDS_AMOUNT;
     private Date trainingDate;
 
     public Integer getMistakesAmount() {

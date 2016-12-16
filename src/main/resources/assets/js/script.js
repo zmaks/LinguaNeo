@@ -404,7 +404,7 @@ function fillStat() {
                 var per = Math.floor(((am-mis) / am) * 100);
                 if(per > 89) fragTrow.toggleClass('success');
                 if(per > 50 && per < 90) fragTrow.toggleClass('warning');
-                if(per < 51 && per > 0) fragTrow.toggleClass('danger');
+                if(per < 51 && per >= 0) fragTrow.toggleClass('danger');
             }
         },
         error: function (xhr, ajaxOptions, thrownError) {
