@@ -2,17 +2,18 @@ package com.zheltoukhov.linguaneo.rest;
 
 import com.zheltoukhov.linguaneo.dto.group.CreateGroupDto;
 import com.zheltoukhov.linguaneo.entity.WordsGroup;
+import com.zheltoukhov.linguaneo.exception.ValidationException;
 import com.zheltoukhov.linguaneo.service.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
+import static com.zheltoukhov.linguaneo.Constants.Messages.GROUP_NAME_VALIDATION_MESSAGE;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 
-/**
- * Created by Maksim on 10.12.2016.
- */
 @RestController
 @RequestMapping("/rest/groups")
 public class GroupRestController {
@@ -28,7 +29,10 @@ public class GroupRestController {
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
     @ResponseBody
-    public WordsGroup create(@RequestBody CreateGroupDto group) {
+    public WordsGroup create(@RequestBody @Valid CreateGroupDto group, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()){
+            throw new ValidationException(GROUP_NAME_VALIDATION_MESSAGE, bindingResult);
+        }
         return groupService.create(group.getName());
     }
 

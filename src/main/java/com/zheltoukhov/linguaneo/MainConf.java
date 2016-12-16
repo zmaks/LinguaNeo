@@ -8,9 +8,6 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-/**
- * Created by Maksim on 07.12.2016.
- */
 @EnableAutoConfiguration
 @ComponentScan("com.zheltoukhov.linguaneo")
 @EnableWebMvc

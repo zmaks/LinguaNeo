@@ -29,4 +29,14 @@ public class WordDto {
     public void setRus(String rus) {
         this.rus = rus;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof WordDto)) return false;
+
+        WordDto wordDto = (WordDto) o;
+        return wordDto.getRus().equalsIgnoreCase(this.getRus()) || wordDto.getEng().equalsIgnoreCase(this.getEng());
+    }
+
 }

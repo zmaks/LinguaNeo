@@ -9,9 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Maksim on 10.12.2016.
- */
 @Service
 public class GroupService {
 

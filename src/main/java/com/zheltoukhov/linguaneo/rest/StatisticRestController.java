@@ -8,9 +8,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * Created by Maksim on 16.12.2016.
- */
 @RestController
 @RequestMapping("/rest/statistic")
 public class StatisticRestController {

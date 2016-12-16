@@ -16,9 +16,6 @@ import java.util.Set;
 
 import static com.zheltoukhov.linguaneo.Constants.Messages.TEXT_VALIDATION_MESSAGE;
 
-/**
- * Created by Maksim on 10.12.2016.
- */
 @RestController
 @RequestMapping("/rest/text")
 public class TextRestController {

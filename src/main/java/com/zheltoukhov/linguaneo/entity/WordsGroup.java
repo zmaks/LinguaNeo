@@ -7,9 +7,6 @@ import java.util.List;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
-/**
- * Created by Maksim on 07.12.2016.
- */
 @Entity
 public class WordsGroup {
 

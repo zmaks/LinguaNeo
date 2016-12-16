@@ -1,10 +1,12 @@
 package com.zheltoukhov.linguaneo.service;
 
+import com.zheltoukhov.linguaneo.component.DefaultWords;
 import com.zheltoukhov.linguaneo.dto.training.TrainingCheckAnswer;
 import com.zheltoukhov.linguaneo.dto.training.TrainingDto;
 import com.zheltoukhov.linguaneo.dto.training.TrainingWordDto;
 import com.zheltoukhov.linguaneo.entity.Training;
 import com.zheltoukhov.linguaneo.entity.Word;
+import com.zheltoukhov.linguaneo.exception.LinguaneoException;
 import com.zheltoukhov.linguaneo.repository.TrainingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,10 +15,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 
 import static com.zheltoukhov.linguaneo.Constants.*;
+import static com.zheltoukhov.linguaneo.Constants.Messages.NO_DATA_FOR_TRAINING;
+import static com.zheltoukhov.linguaneo.Constants.Messages.NO_DATA_FOR__GROUP_TRAINING;
 
-/**
- * Created by Maksim on 10.12.2016.
- */
 @Service
 public class TrainingService {
 
@@ -27,13 +28,17 @@ public class TrainingService {
     private TrainingRepository trainingRepository;
 
     public TrainingDto getTrainingData(Long groupId){
+        if (wordService.getCount() < TRAINING_WORDS_MIN_AMOUNT)
+            throw new LinguaneoException(NO_DATA_FOR_TRAINING);
         List<Word> words = new ArrayList<Word>();
-        if (groupId != null)
+        if (groupId != null) {
             words.addAll(wordService.getByGroupId(groupId));
-        else
+            if (words.size() < TRAINING_WORDS_MIN_AMOUNT)
+                throw new LinguaneoException(NO_DATA_FOR__GROUP_TRAINING);
+        } else
             words.addAll(generateWordsList());
         Training training = create();
-        List<TrainingWordDto> trainingWordList = createTrainingWords(words);
+        List<TrainingWordDto> trainingWordList = createTrainingWords(words, groupId);
         updateTrainingWordsAmount(training, trainingWordList.size());
         return new TrainingDto(training.getId(), trainingWordList);
     }
@@ -87,23 +92,32 @@ public class TrainingService {
         return result   ;
     }
 
-    private List<TrainingWordDto> createTrainingWords(List<Word> words){
+    private List<TrainingWordDto> createTrainingWords(List<Word> words, Long groupId){
         List<TrainingWordDto> result = new ArrayList<TrainingWordDto>();
         for (Word word : words) {
-            result.add(new TrainingWordDto(word.getEng(), generateAnswersWords(word)));
+            result.add(new TrainingWordDto(word.getEng(), generateAnswersWords(word, groupId)));
         }
         Collections.shuffle(result);
         return result;
     }
 
-    private List<String> generateAnswersWords(Word word) {
-        List<String> answers = new ArrayList<String>();
+    private Set<String> generateAnswersWords(Word word, Long groupId) {
+        Set<String> answers = new HashSet<String>();
         answers.add(word.getRus());
-        while (answers.size() < ANSWERS_WORDS_AMOUNT){
-            // TODO: Add default words
-            answers.add("---------");
+        List<Word> words;
+        if (groupId != null) {
+            words = wordService.getByGroupId(groupId, ANSWERS_WORDS_AMOUNT);
+        } else {
+            words = wordService.getAllWords();
         }
-        Collections.shuffle(answers);
+        Collections.shuffle(words);
+        int count = words.size() < ANSWERS_WORDS_AMOUNT-1 ? words.size() : ANSWERS_WORDS_AMOUNT-1;
+        for(int i = 0; i < count; i++){
+            answers.add(words.get(i).getRus());
+        }
+        while (answers.size() < ANSWERS_WORDS_AMOUNT){
+            answers.add(DefaultWords.getWord());
+        }
         return answers;
     }
 

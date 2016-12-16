@@ -12,9 +12,6 @@ import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Maksim on 07.12.2016.
- */
 @Component
 public class DBInit {
 
@@ -28,22 +25,29 @@ public class DBInit {
     @Transactional
     public void init(){
         WordsGroup group = new WordsGroup();
-        group.setName("GR1");
-        groupRepository.save(group);
+        group.setName("Животные");
+        group = groupRepository.save(group);
+        createWord("cat","кошка", 3, group);
+        createWord("dog","собака", 4, group);
+        createWord("tiger","тигр", 3, group);
+        createWord("fox","лиса", 0, group);
+        createWord("monkey","обезьяна", 5, group);
+        createWord("car","машина", 3, null);
+        createWord("bus","автобус", 3, null);
+        createWord("house","дом", 3, null);
+        createWord("box","коробка", 0, null);
+        createWord("world","мир", 1, null);
 
+
+    }
+
+    private Word createWord(String eng, String rus, Integer ind, WordsGroup group){
         Word word1 = new Word();
-        word1.setEng("dog");
-        word1.setRus("собака");
-        word1.setMistakeIndex(3);
-        word1.setWordsGroup(group);
-        wordRepository.save(word1);
-
-        Word word2 = new Word();
-        word2.setEng("cat");
-        word2.setRus("кошка");
-        word2.setMistakeIndex(0);
-        word2.setWordsGroup(group);
-        wordRepository.save(word2);
-
+        word1.setEng(eng);
+        word1.setRus(rus);
+        word1.setMistakeIndex(ind);
+        if(group!=null)
+            word1.setWordsGroup(group);
+        return wordRepository.save(word1);
     }
 }

@@ -1,12 +1,11 @@
 package com.zheltoukhov.linguaneo.translator;
 
-/**
- * Created by Maksim on 07.12.2016.
- */
+import com.zheltoukhov.linguaneo.translator.exception.TranslatorException;
+
 public interface TranslationService {
 
-    TranslationDto translateEngToRus(String word);
-    TranslationDto translateRusToEng(String word);
-    TranslationDto translateWord(String word);
-    Language recognizeLanguage(String word);
+    TranslationDto translateEngToRus(String word) throws TranslatorException;
+    TranslationDto translateRusToEng(String word) throws TranslatorException;
+    TranslationDto translateWord(String word) throws TranslatorException;
+    Language recognizeLanguage(String word) throws TranslatorException;
 }

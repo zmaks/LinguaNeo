@@ -7,9 +7,6 @@ import java.util.Date;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
-/**
- * Created by Maksim on 10.12.2016.
- */
 @Entity
 public class Training {
 

@@ -8,9 +8,6 @@ import java.util.regex.Pattern;
 
 import static com.zheltoukhov.linguaneo.Constants.WORD_REGEXP;
 
-/**
- * Created by mazh0416 on 12/12/2016.
- */
 public class WordValidator implements ConstraintValidator<ValidWord, String> {
     @Override
     public void initialize(ValidWord validWord) {}

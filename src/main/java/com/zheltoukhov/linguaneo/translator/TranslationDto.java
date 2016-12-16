@@ -1,8 +1,5 @@
 package com.zheltoukhov.linguaneo.translator;
 
-/**
- * Created by Maksim on 08.12.2016.
- */
 public class TranslationDto {
     private String engValue;
     private String rusValue;

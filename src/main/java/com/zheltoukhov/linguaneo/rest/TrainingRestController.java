@@ -8,9 +8,6 @@ import com.zheltoukhov.linguaneo.service.TrainingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-/**
- * Created by Maksim on 11.12.2016.
- */
 @RestController
 @RequestMapping("/rest/training")
 public class TrainingRestController {

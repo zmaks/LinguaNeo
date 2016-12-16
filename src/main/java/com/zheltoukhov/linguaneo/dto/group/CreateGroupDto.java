@@ -1,9 +1,11 @@
 package com.zheltoukhov.linguaneo.dto.group;
 
-/**
- * Created by Maksim on 16.12.2016.
- */
+import com.zheltoukhov.linguaneo.validation.annotation.ValidGroupName;
+
+import static com.zheltoukhov.linguaneo.Constants.Messages.GROUP_NAME_VALIDATION_MESSAGE;
+
 public class CreateGroupDto {
+    @ValidGroupName(message = GROUP_NAME_VALIDATION_MESSAGE)
     private String name;
 
     public String getName() {

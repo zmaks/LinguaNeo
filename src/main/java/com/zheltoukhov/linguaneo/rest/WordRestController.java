@@ -18,9 +18,6 @@ import java.util.List;
 import static com.zheltoukhov.linguaneo.Constants.Messages.WORD_VALIDATION_MESSAGE;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 
-/**
- * Created by Maksim on 08.12.2016.
- */
 @RestController
 @RequestMapping("/rest/words")
 public class WordRestController {

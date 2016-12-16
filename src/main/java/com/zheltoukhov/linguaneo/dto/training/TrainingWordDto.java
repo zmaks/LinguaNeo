@@ -1,15 +1,12 @@
 package com.zheltoukhov.linguaneo.dto.training;
 
-import java.util.List;
+import java.util.Set;
 
-/**
- * Created by Maksim on 10.12.2016.
- */
 public class TrainingWordDto {
     private String question;
-    private List<String> answers;
+    private Set<String> answers;
 
-    public TrainingWordDto(String question, List<String> answers) {
+    public TrainingWordDto(String question, Set<String> answers) {
         this.question = question;
         this.answers = answers;
     }
@@ -22,11 +19,11 @@ public class TrainingWordDto {
         this.question = question;
     }
 
-    public List<String> getAnswers() {
+    public Set<String> getAnswers() {
         return answers;
     }
 
-    public void setAnswers(List<String> answers) {
+    public void setAnswers(Set<String> answers) {
         this.answers = answers;
     }
 }

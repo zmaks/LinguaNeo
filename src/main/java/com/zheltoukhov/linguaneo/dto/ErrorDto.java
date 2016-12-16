@@ -1,8 +1,5 @@
 package com.zheltoukhov.linguaneo.dto;
 
-/**
- * Created by mazh0416 on 12/12/2016.
- */
 public class ErrorDto {
     private String field;
     private String errorMessage;

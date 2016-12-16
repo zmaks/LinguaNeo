@@ -3,9 +3,6 @@ package com.zheltoukhov.linguaneo.translator;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by Maksim on 08.12.2016.
- */
 public enum Language {
     ENG("en"),
     RUS("ru");

@@ -1,8 +1,5 @@
 package com.zheltoukhov.linguaneo.dto.training;
 
-/**
- * Created by Maksim on 11.12.2016.
- */
 public class TrainingCheckAnswer {
     private boolean isCorrect;
     private String answer;

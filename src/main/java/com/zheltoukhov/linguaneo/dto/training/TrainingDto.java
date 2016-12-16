@@ -2,9 +2,6 @@ package com.zheltoukhov.linguaneo.dto.training;
 
 import java.util.List;
 
-/**
- * Created by Maksim on 10.12.2016.
- */
 public class TrainingDto {
     private Long id;
     private List<TrainingWordDto> words;

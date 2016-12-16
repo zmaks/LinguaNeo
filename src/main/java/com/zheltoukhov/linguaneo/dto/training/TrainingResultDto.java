@@ -1,8 +1,5 @@
 package com.zheltoukhov.linguaneo.dto.training;
 
-/**
- * Created by Maksim on 16.12.2016.
- */
 public class TrainingResultDto {
     private Long id;
     private Integer mistakes;

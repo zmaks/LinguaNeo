@@ -1,22 +1,24 @@
 package com.zheltoukhov.linguaneo.repository;
 
 import com.zheltoukhov.linguaneo.entity.Word;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
-/**
- * Created by Maksim on 07.12.2016.
- */
 public interface WordRepository extends CrudRepository<Word, Long> {
+
+    Page<Word> findAll(Pageable pageable);
 
     Word findByEng(String eng);
 
     Word findByRus(String rus);
 
     List<Word> findByWordsGroupId(Long groupId);
+
+    List<Word> findByWordsGroupId(Long groupId, Pageable pageable);
 
     List<Word> findByOrderByLastUsageAsc(Pageable pageable);
 

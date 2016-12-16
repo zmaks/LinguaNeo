@@ -4,6 +4,7 @@ import com.zheltoukhov.linguaneo.dto.translation.TranslationWordDto;
 import com.zheltoukhov.linguaneo.dto.word.UpdateGroupDto;
 import com.zheltoukhov.linguaneo.dto.word.WordDto;
 import com.zheltoukhov.linguaneo.entity.Word;
+import com.zheltoukhov.linguaneo.exception.LinguaneoException;
 import com.zheltoukhov.linguaneo.repository.WordRepository;
 import com.zheltoukhov.linguaneo.translator.Language;
 import com.zheltoukhov.linguaneo.translator.TranslationDto;
@@ -19,10 +20,7 @@ import java.util.Date;
 import java.util.List;
 
 import static com.zheltoukhov.linguaneo.Constants.*;
-
-/**
- * Created by Maksim on 07.12.2016.
- */
+import static com.zheltoukhov.linguaneo.Constants.Messages.NO_CONTENT_FOR_WORD_OBJECT;
 
 @Service
 public class WordService {
@@ -63,12 +61,17 @@ public class WordService {
 
     @Transactional
     public Word create(WordDto wordDto){
+        if(wordDto.getEng() == null || wordDto.getRus() == null)
+            throw new LinguaneoException(NO_CONTENT_FOR_WORD_OBJECT);
         Word word = new Word();
+        /*if(wordRepository.findByEng(wordDto.getEng()) == null &&
+                wordRepository.findByRus(wordDto.getRus()) == null){*/
         word.setEng(wordDto.getEng().toLowerCase());
         word.setRus(wordDto.getRus().toLowerCase());
         word.setLastUsage(new Date());
         word.setMistakeIndex(DEFAULT_MISTAKE_INDEX);
         word = wordRepository.save(word);
+
         return word;
     }
 
@@ -89,6 +92,10 @@ public class WordService {
         return words;
         /*return stream(wordRepository.findAll().spliterator(), false)
                 .collect(toList());*/
+    }
+
+    public List<Word> getByAmount(Integer amount){
+        return wordRepository.findAll(new PageRequest(0,amount)).getContent();
     }
 
     @Transactional
@@ -122,6 +129,11 @@ public class WordService {
     @Transactional
     public List<Word> getByGroupId(Long groupId){
         return wordRepository.findByWordsGroupId(groupId);
+    }
+
+    @Transactional
+    public List<Word> getByGroupId(Long groupId, Integer amount) {
+        return wordRepository.findByWordsGroupId(groupId, new PageRequest(0, amount));
     }
 
     @Transactional

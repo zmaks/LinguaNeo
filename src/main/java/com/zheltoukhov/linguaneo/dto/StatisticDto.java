@@ -2,13 +2,9 @@ package com.zheltoukhov.linguaneo.dto;
 
 import com.zheltoukhov.linguaneo.dto.word.WordDto;
 import com.zheltoukhov.linguaneo.entity.Training;
-import com.zheltoukhov.linguaneo.entity.Word;
 
 import java.util.List;
 
-/**
- * Created by Maksim on 16.12.2016.
- */
 public class StatisticDto {
     private Long allCount;
     private Long learnedCount;
