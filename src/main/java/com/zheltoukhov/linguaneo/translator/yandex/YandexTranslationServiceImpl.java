@@ -6,6 +6,7 @@ import com.zheltoukhov.linguaneo.translator.TranslationService;
 import com.zheltoukhov.linguaneo.translator.exception.TranslatorException;
 import com.zheltoukhov.linguaneo.translator.yandex.response.YandexRecognitionResponse;
 import com.zheltoukhov.linguaneo.translator.yandex.response.YandexTranslationResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -20,12 +21,14 @@ public class YandexTranslationServiceImpl implements TranslationService {
     private static final String LANG_RECOGNITION_URL = "https://translate.yandex.net/api/v1.5/tr.json/detect?key=%s&text=%s&hint=ru,en";
     private static final String RECOGNITION_ERROR_MESSAGE = "Ошибка распознания языка";
     private static final String TRANSLATION_ERROR_MESSAGE = "Ошибка во время перевода";
+
+    @Autowired
     private RestTemplate restTemplate;
 
-    @PostConstruct
+    /*@PostConstruct
     void init(){
         restTemplate = new RestTemplate();
-    }
+    }*/
 
     @Override
     public TranslationDto translateEngToRus(String word) throws TranslatorException{

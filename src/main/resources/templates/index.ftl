@@ -22,7 +22,7 @@
                   <div class="row">
                       <div class="col-md-12">
                           <div class="input-group">
-                              <input id="search-input" onkeyup="searchWords()" type="text" class="form-control" placeholder="Найти слово...">
+                              <input id="search-input" onkeyup="searchWords()" type="text" class="form-control" placeholder="Введите слово (от 2 до 20 букв)...">
                               <span class="input-group-btn">
                                 <button id="trans-button" class="btn btn-default" type="button" disabled="disabled">Перевести</button>
                               </span>

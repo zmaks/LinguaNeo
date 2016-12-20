@@ -120,8 +120,8 @@ $(document).ready(function() {
             },
             error: function (xhr, ajaxOptions, thrownError) {
                 var jsonValue = jQuery.parseJSON(xhr.responseText);
-                //alert(jsonValue.errorMessage);
-                showError(jsonValue.errorMessage);
+                alert(jsonValue.errorMessage);
+                //showError(jsonValue.errorMessage);
             }
         });
     });
