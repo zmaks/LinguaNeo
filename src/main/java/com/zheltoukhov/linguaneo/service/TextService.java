@@ -5,6 +5,7 @@ import com.zheltoukhov.linguaneo.exception.LinguaneoException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -18,6 +19,13 @@ public class TextService {
 
     @Autowired
     private WordService wordService;
+
+    private Pattern pattern;
+
+    @PostConstruct
+    private void init(){
+        pattern = Pattern.compile(WORD_REGEXP_IN_TEXT_REGEXP);
+    }
 
     public Set<TranslationWordDto> parseAndTranslateText(String text){
         Set<TranslationWordDto> result = new HashSet<TranslationWordDto>();
@@ -33,7 +41,7 @@ public class TextService {
     public Set<String> parseText(String text){
         Set<String> words = new HashSet<String>();
         text = ("%"+text+"%").replaceAll("[,.?!;:''\"\\s]", "%%");
-        Matcher matcher = Pattern.compile(WORD_REGEXP_IN_TEXT_REGEXP).matcher(text);
+        Matcher matcher = pattern.matcher(text);
         while(matcher.find()) {
             words.add(matcher.group().replace("%",""));
         }
