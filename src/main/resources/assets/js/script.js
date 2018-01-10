@@ -67,7 +67,7 @@ $(document).ready(function() {
         var inp = $(this);
         var btn = $('#trans-button');
         var correct = true;
-        if (inp.val().length<2 || inp.val().length>20) {
+        if (inp.val().length<1 || inp.val().length>20) {
             correct = false;
         }
         if(correct){
