@@ -8,6 +8,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class PageMapper {
     @RequestMapping("")
     public String getHomepage() {
-        return "index";
+        return "static/index";
     }
 }
